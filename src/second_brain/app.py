@@ -1,6 +1,29 @@
+import os
 import sys
 
 from loguru import logger
+
+_LEVEL_ABBREV = {
+    "DEBUG": "DBG",
+    "INFO": "INF",
+    "WARNING": "WRN",
+    "ERROR": "ERR",
+    "CRITICAL": "CRT",
+}
+
+_LOG_FORMAT = (
+    "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+    "<level>{extra[lvl]}</level> | "
+    "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
+    "<level>{message}</level>\n"
+)
+
+
+def _formatter(record):
+    record["extra"]["lvl"] = _LEVEL_ABBREV.get(
+        record["level"].name, record["level"].name[:3]
+    )
+    return _LOG_FORMAT
 
 
 def configure_logging():
@@ -10,13 +33,13 @@ def configure_logging():
     - stderr handler at LOG_LEVEL (default: INFO, configurable via env var)
     - File handler at DEBUG level writing to LOG_FILE (default: app.log)
     """
-    import os
-
     log_level = os.environ.get("LOG_LEVEL", "INFO")
     log_file = os.environ.get("LOG_FILE", "app.log")
     logger.remove()
-    logger.add(sys.stderr, level=log_level)
-    logger.add(log_file, level="DEBUG", rotation="50 KB", retention=1)
+    logger.add(sys.stderr, level=log_level, format=_formatter)
+    logger.add(
+        log_file, level="DEBUG", rotation="50 KB", retention=1, format=_formatter
+    )
 
 
 @logger.catch

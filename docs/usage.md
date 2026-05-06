@@ -31,3 +31,13 @@ uv run python -m second_brain
 | `LOG_FILE`  | `app.log`  | Path to the log file                 |
 
 Copy `.env.example` to `.env` for development defaults, then run with `uv run --env-file .env`.
+
+## Log Format
+
+Stderr and the log file share the same compact, pipe-separated layout:
+
+```
+2026-05-06 14:32:01 | INF | second_brain.app:main:29 | Hello from second_brain!
+```
+
+Levels are abbreviated to three characters (`DBG`, `INF`, `WRN`, `ERR`, `CRT`) and the timestamp is seconds-precision.
