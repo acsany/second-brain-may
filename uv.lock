@@ -657,6 +657,7 @@ name = "second-brain"
 version = "0.0.1"
 source = { editable = "." }
 dependencies = [
+    { name = "click" },
     { name = "loguru" },
 ]
 
@@ -672,7 +673,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "loguru", specifier = ">=0.7" }]
+requires-dist = [
+    { name = "click", specifier = ">=8.1,<9" },
+    { name = "loguru", specifier = ">=0.7" },
+]
 
 [package.metadata.requires-dev]
 dev = [

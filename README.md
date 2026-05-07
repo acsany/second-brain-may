@@ -12,22 +12,24 @@ uv sync
 
 ## Usage
 
-Via the CLI entrypoint:
+The CLI exposes three subcommands:
 
 ```bash
-uv run second_brain
+uv run second_brain new "My brilliant idea"   # create a note
+uv run second_brain list                      # list notes (newest first)
+uv run second_brain show 1                    # print the contents of note 1
 ```
 
 With dev environment variables loaded:
 
 ```bash
-uv run --env-file .env second_brain
+uv run --env-file .env second_brain new "My brilliant idea"
 ```
 
 Via Python module:
 
 ```bash
-uv run python -m second_brain
+uv run python -m second_brain new "My brilliant idea"
 ```
 
 ## Environment Variables
@@ -40,10 +42,11 @@ cp .env.example .env
 
 Note: `uv run --env-file .env` loads the dev environment explicitly — there is no auto-loading.
 
-| Variable    | Default    | Description                                          |
-|-------------|------------|------------------------------------------------------|
-| `LOG_LEVEL` | `INFO`     | Console log level. Set to `DEBUG` in `.env` for verbose output. |
-| `LOG_FILE`  | `app.log`  | Path to the log file.                                |
+| Variable            | Default            | Description                                          |
+|---------------------|--------------------|------------------------------------------------------|
+| `LOG_LEVEL`         | `INFO`             | Console log level. Set to `DEBUG` in `.env` for verbose output. |
+| `LOG_FILE`          | `app.log`          | Path to the log file.                                |
+| `SECOND_BRAIN_DIR`  | `~/second_brain/`  | Directory where notes are stored.                    |
 
 ## Log Format
 
