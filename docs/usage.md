@@ -13,7 +13,7 @@ uv sync
 The CLI exposes three subcommands:
 
 ```bash
-uv run second_brain new "My brilliant idea"   # create a note
+uv run second_brain new "My brilliant idea"   # create a stub note
 uv run second_brain list                      # list notes (newest first)
 uv run second_brain show 1                    # print the contents of note 1
 ```
@@ -29,6 +29,22 @@ Or as a Python module:
 ```bash
 uv run python -m second_brain new "My brilliant idea"
 ```
+
+### One-shot note creation with body
+
+`new` accepts an optional `--content` / `-c` flag that writes the supplied
+string as the note body. The escape sequences `\n`, `\t`, `\r` and `\\` are
+decoded into the corresponding characters, so multi-line bodies work from a
+plain double-quoted shell argument; real newlines (e.g. from `$'...'` or a
+`$(...)` substitution) are preserved verbatim:
+
+```bash
+uv run second_brain new "Idea" --content "Body text"
+uv run second_brain new "Multi" -c "line1\nline2"
+uv run second_brain new "Multi" -c $'line1\nline2'
+```
+
+When `--content` is omitted, the file contains only the heading and timestamp.
 
 ## Environment Variables
 

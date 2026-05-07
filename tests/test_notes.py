@@ -97,6 +97,24 @@ def test_create_note_creates_directory(tmp_path):
     assert path.is_file()
 
 
+def test_create_note_appends_body(tmp_path):
+    path = create_note("Test idea", tmp_path, now=FIXED_NOW, body="hello world")
+    text = path.read_text()
+    assert text == "# Test idea\n\n2026-03-22T14:30:00\n\nhello world\n"
+
+
+def test_create_note_body_preserves_newlines(tmp_path):
+    path = create_note("Test idea", tmp_path, now=FIXED_NOW, body="line1\nline2")
+    text = path.read_text()
+    assert text.endswith("\n\nline1\nline2\n")
+
+
+def test_create_note_body_none_matches_legacy_output(tmp_path):
+    path = create_note("Test idea", tmp_path, now=FIXED_NOW, body=None)
+    text = path.read_text()
+    assert text == "# Test idea\n\n2026-03-22T14:30:00\n"
+
+
 # ---------------------------------------------------------------------------
 # duplicate-title handling
 # ---------------------------------------------------------------------------

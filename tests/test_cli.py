@@ -77,6 +77,54 @@ def test_cli_new_file_content_has_timestamp(tmp_note_dir):
     assert re.search(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", text)
 
 
+def test_cli_new_content_flag_appends_body(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "With body", "--content", "single line"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    text = md_file.read_text()
+    assert text.endswith("\n\nsingle line\n")
+    assert text.startswith("# With body\n\n")
+
+
+def test_cli_new_content_short_flag_preserves_newlines(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Multi", "-c", "line1\nline2"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    lines = md_file.read_text().splitlines()
+    assert lines[-2] == "line1"
+    assert lines[-1] == "line2"
+
+
+def test_cli_new_content_decodes_backslash_n(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Esc", "-c", "line1\\nline2"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    lines = md_file.read_text().splitlines()
+    assert lines[-2] == "line1"
+    assert lines[-1] == "line2"
+
+
+def test_cli_new_content_double_backslash_stays_literal(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Esc2", "-c", "a\\\\nb"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    text = md_file.read_text()
+    assert text.endswith("\n\na\\nb\n")
+
+
+def test_cli_new_without_content_unchanged(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Stub"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    text = md_file.read_text()
+    lines = text.splitlines()
+    assert lines[0] == "# Stub"
+    assert lines[1] == ""
+    assert re.match(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", lines[2])
+    assert len(lines) == 3
+    assert text.endswith("\n")
+
+
 # ---------------------------------------------------------------------------
 # help
 # ---------------------------------------------------------------------------

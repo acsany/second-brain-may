@@ -15,7 +15,8 @@ uv sync
 The CLI exposes three subcommands:
 
 ```bash
-uv run second_brain new "My brilliant idea"   # create a note
+uv run second_brain new "My brilliant idea"   # create a stub note
+uv run second_brain new "Idea" -c "Body text" # create a note with body content
 uv run second_brain list                      # list notes (newest first)
 uv run second_brain show 1                    # print the contents of note 1
 ```
