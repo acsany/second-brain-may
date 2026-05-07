@@ -33,10 +33,14 @@ uv run python -m second_brain new "My brilliant idea"
 ### One-shot note creation with body
 
 `new` accepts an optional `--content` / `-c` flag that writes the supplied
-string as the note body. Newlines in the value are preserved verbatim:
+string as the note body. The escape sequences `\n`, `\t`, `\r` and `\\` are
+decoded into the corresponding characters, so multi-line bodies work from a
+plain double-quoted shell argument; real newlines (e.g. from `$'...'` or a
+`$(...)` substitution) are preserved verbatim:
 
 ```bash
 uv run second_brain new "Idea" --content "Body text"
+uv run second_brain new "Multi" -c "line1\nline2"
 uv run second_brain new "Multi" -c $'line1\nline2'
 ```
 

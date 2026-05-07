@@ -18,6 +18,23 @@ def cli():
     configure_logging()
 
 
+def _decode_escapes(s: str) -> str:
+    """Interpret ``\\n``, ``\\t``, ``\\r``, and ``\\\\`` escapes in ``s``.
+
+    Lets users pass ``-c "line1\\nline2"`` from a normal double-quoted shell
+    string and get a real newline, matching the UX implied by issue #3.
+    Other backslash sequences are left untouched.
+    """
+    placeholder = "\x00"
+    return (
+        s.replace("\\\\", placeholder)
+        .replace("\\n", "\n")
+        .replace("\\t", "\t")
+        .replace("\\r", "\r")
+        .replace(placeholder, "\\")
+    )
+
+
 @cli.command()
 @click.argument("title")
 @click.option(
@@ -25,15 +42,25 @@ def cli():
     "-c",
     "content",
     default=None,
-    help="Body content to write below the header. Newlines are preserved.",
+    help=(
+        "Body content to write below the header. Backslash escapes "
+        "(\\n, \\t, \\r, \\\\) are interpreted; real newlines are preserved."
+    ),
 )
 def new(title: str, content: str | None):
-    """Create a new note with the given TITLE."""
+    """Create a new note with the given TITLE.
+
+    With no options, writes a stub containing the heading and an ISO
+    timestamp. Pass --content/-c to also write a body below the header;
+    \\n, \\t, \\r and \\\\ in the value are decoded into the corresponding
+    characters, and real newlines are preserved verbatim.
+    """
     base_dir = Path(
         os.environ.get("SECOND_BRAIN_DIR", str(Path.home() / "second_brain"))
     ).expanduser()
     logger.debug("Creating note in {}", base_dir)
-    path = create_note(title, base_dir, body=content)
+    body = _decode_escapes(content) if content is not None else None
+    path = create_note(title, base_dir, body=body)
     logger.info("Created note: {}", path)
     click.echo(path)
 

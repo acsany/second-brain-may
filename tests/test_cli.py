@@ -95,6 +95,23 @@ def test_cli_new_content_short_flag_preserves_newlines(tmp_note_dir):
     assert lines[-1] == "line2"
 
 
+def test_cli_new_content_decodes_backslash_n(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Esc", "-c", "line1\\nline2"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    lines = md_file.read_text().splitlines()
+    assert lines[-2] == "line1"
+    assert lines[-1] == "line2"
+
+
+def test_cli_new_content_double_backslash_stays_literal(tmp_note_dir):
+    result = runner.invoke(cli, ["new", "Esc2", "-c", "a\\\\nb"])
+    assert result.exit_code == 0
+    md_file = next(tmp_note_dir.glob("*.md"))
+    text = md_file.read_text()
+    assert text.endswith("\n\na\\nb\n")
+
+
 def test_cli_new_without_content_unchanged(tmp_note_dir):
     result = runner.invoke(cli, ["new", "Stub"])
     assert result.exit_code == 0
