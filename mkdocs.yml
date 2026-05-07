@@ -38,4 +38,6 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Usage: usage.md
+  - TUI: tui.md
+  - Commands: commands.md
   - API Reference: api.md

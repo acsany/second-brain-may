@@ -10,7 +10,15 @@ uv sync
 
 ## Running
 
-The CLI exposes three subcommands:
+With no arguments, the executable launches a Textual-based TUI — a two-pane
+interface with a sidebar list of notes and a markdown viewer/editor on the
+right (see [TUI](tui.md) for details):
+
+```bash
+uv run second_brain                           # launch the TUI
+```
+
+The CLI also exposes three subcommands for scripted use:
 
 ```bash
 uv run second_brain new "My brilliant idea"   # create a stub note

@@ -12,7 +12,15 @@ uv sync
 
 ## Usage
 
-The CLI exposes three subcommands:
+Running with no arguments launches a Textual TUI — a two-pane interface with
+a scrollable sidebar of notes on the left and a markdown viewer/editor on the
+right:
+
+```bash
+uv run second_brain                           # launch the TUI
+```
+
+Or use the CLI subcommands directly:
 
 ```bash
 uv run second_brain new "My brilliant idea"   # create a stub note
@@ -20,6 +28,14 @@ uv run second_brain new "Idea" -c "Body text" # create a note with body content
 uv run second_brain list                      # list notes (newest first)
 uv run second_brain show 1                    # print the contents of note 1
 ```
+
+### TUI keys & controls
+
+- Click a note (or arrow-up/down) to view its rendered markdown.
+- Click **Create** (or press `n`) to enter edit mode with a blank markdown
+  editor. **Save** writes the note (the first non-empty line, stripped of any
+  leading `#`s, becomes the title and filename slug). **Cancel** discards.
+- Press `q` to quit.
 
 With dev environment variables loaded:
 

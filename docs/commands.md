@@ -4,9 +4,13 @@
 flowchart TD
     CLI([second-brain]):::root
 
+    CLI --> TUI["(no args) — TUI"]:::cmd
     CLI --> NEW["new TITLE [-c CONTENT]"]:::cmd
     CLI --> LIST[list]:::cmd
     CLI --> SHOW[show NUMBER]:::cmd
+
+    TUI --> TUI_DESC[/"Two-pane Textual TUI:<br/>sidebar list + markdown<br/>viewer / editor"/]:::desc
+    TUI_DESC --> DIR
 
     NEW --> NEW_DESC[/"Create a new .md note<br/>(optionally with body)<br/>and echo its path"/]:::desc
     LIST --> LIST_DESC[/"List all notes<br/>newest first"/]:::desc

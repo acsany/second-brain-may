@@ -12,10 +12,23 @@ from second_brain.app import configure_logging
 from second_brain.notes import create_note
 
 
-@click.group()
-def cli():
-    """second_brain -- capture and organise your thoughts."""
+@click.group(invoke_without_command=True)
+@click.pass_context
+def cli(ctx: click.Context):
+    """second_brain -- capture and organise your thoughts.
+
+    With no subcommand, launches the Textual TUI (sidebar of notes plus a
+    markdown viewer/editor on the right).
+    """
     configure_logging()
+    if ctx.invoked_subcommand is None:
+        from second_brain.tui import SecondBrainApp
+
+        base_dir = Path(
+            os.environ.get("SECOND_BRAIN_DIR", str(Path.home() / "second_brain"))
+        ).expanduser()
+        logger.debug("Launching TUI with notes_dir={}", base_dir)
+        SecondBrainApp(notes_dir=base_dir).run()
 
 
 def _decode_escapes(s: str) -> str:
